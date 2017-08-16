@@ -74,6 +74,10 @@ public class DingDingHunter implements IXposedHookLoadPackage {
                 for (Object msg : (Collection) param.args[1]) {
 
                     String text = DingDingMsg.getMsgText(msg);
+                    if(null == text || text.equals(DingDingMsg.MSG_RECALL)){
+                        continue;
+                    }
+
                     long mid = DingDingMsg.getMsgId(msg);
                     long senderId = DingDingMsg.getMsgSenderId(msg);
                     String senderName = DingDingMsg.getMsgSenderName(msg);
@@ -82,6 +86,7 @@ public class DingDingHunter implements IXposedHookLoadPackage {
                     map.put("mid", Long.toString(mid));
                     map.put("content", text);
                     map.put("senderId", senderId);
+                    map.put("type", DingDingMsg.MessageContentType.TEXT);
                     if(senderName != null && !senderName.isEmpty()){
                         map.put("senderName", senderName);
                     }

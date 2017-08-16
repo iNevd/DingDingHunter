@@ -49,7 +49,7 @@ public class RetrofitUtils {
     }
 
     public void asyncPostNotice(final Map parameters) {
-        Call<BaseNetModel> call = apiService.executeGet(uri_notice, parameters);
+        Call<BaseNetModel> call = apiService.executePost(uri_notice, parameters);
 
         call.enqueue(new Callback<BaseNetModel>() {
 

@@ -8,6 +8,8 @@ import de.robv.android.xposed.XposedHelpers;
 
 public class DingDingMsg {
 
+    public static String MSG_RECALL = "Msg has been recalled.";
+
     public static String getMsgText(Object msg) {
         Object innerContent = XposedHelpers.getObjectField(msg, "mMessageContent");
         int type = (int) XposedHelpers.callMethod(innerContent, "type");

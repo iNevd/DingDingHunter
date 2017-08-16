@@ -6,8 +6,7 @@ import retrofit2.Call;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.QueryMap;
+import retrofit2.http.Url;
 
 /**
  * Created by nevd on 8/3/2017.
@@ -15,8 +14,8 @@ import retrofit2.http.QueryMap;
 
 public interface NetService {
     @FormUrlEncoded
-    @POST("{url}")
-    Call<BaseNetModel> executeGet(
-            @Path("url") String url,
+    @POST
+    Call<BaseNetModel> executePost(
+            @Url String url,
             @FieldMap Map<String, String> parameters);
 }
