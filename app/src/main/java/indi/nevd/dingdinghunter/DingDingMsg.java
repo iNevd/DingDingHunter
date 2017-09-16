@@ -10,22 +10,32 @@ public class DingDingMsg {
 
     public static String MSG_RECALL = "Msg has been recalled.";
 
-    public static String getMsgText(Object msg) {
-        Object innerContent = XposedHelpers.getObjectField(msg, "mMessageContent");
-        int type = (int) XposedHelpers.callMethod(innerContent, "type");
-        if (type == MessageContentType.TEXT) {
-            String text = (String) XposedHelpers.callMethod(innerContent, "text");
-            return text;
-        }
-        return null;
-    }
-
     public static void setMsgText(Object msg, String newText) {
         Object innerContent = XposedHelpers.getObjectField(msg, "mMessageContent");
         int type = (int) XposedHelpers.callMethod(innerContent, "type");
         if (type == MessageContentType.TEXT) {
             XposedHelpers.callMethod(innerContent, "setText", newText);
         }
+    }
+
+    public static int getMsgType(Object msg){
+        Object innerContent = XposedHelpers.getObjectField(msg, "mMessageContent");
+        return (int) XposedHelpers.callMethod(innerContent, "type");
+    }
+
+    public static String getMsgContent(Object msg, int type) {
+        String content = null;
+
+        Object innerContent = XposedHelpers.getObjectField(msg, "mMessageContent");
+
+        if (type == MessageContentType.TEXT) {
+            if (type == MessageContentType.TEXT) {
+                content = (String) XposedHelpers.callMethod(innerContent, "text");
+            }else if(type == MessageContentType.IMAGE){
+                content = (String)XposedHelpers.callMethod(innerContent, "url");          // http://static.dingtalk.com/media/xxx.jpg
+            }
+        }
+        return content;
     }
 
     public static String getMsgSenderName(Object msg) {
@@ -39,6 +49,16 @@ public class DingDingMsg {
     public static long getMsgSenderId(Object msg){
         return XposedHelpers.getLongField(msg, "mSenderId");
     }
+
+    public static String getConversationId(Object msg){
+        Object conversation = XposedHelpers.getObjectField(msg, "mConversation");
+        return (String)XposedHelpers.callMethod(conversation, "conversationId");
+    }
+
+    public static long getMsgTime(Object msg){
+        return XposedHelpers.getLongField(msg, "mCreatedAt");
+    }
+
 
     public static class MessageContentType
     {

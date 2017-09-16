@@ -72,21 +72,26 @@ public class DingDingHunter implements IXposedHookLoadPackage {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 
                 for (Object msg : (Collection) param.args[1]) {
-
-                    String text = DingDingMsg.getMsgText(msg);
-                    if(null == text || text.equals(DingDingMsg.MSG_RECALL)){
+                    int type = DingDingMsg.getMsgType(msg);
+                    String content = DingDingMsg.getMsgContent(msg, type);
+                    if(null == content || content.equals(DingDingMsg.MSG_RECALL)) {
                         continue;
                     }
-
                     long mid = DingDingMsg.getMsgId(msg);
                     long senderId = DingDingMsg.getMsgSenderId(msg);
                     String senderName = DingDingMsg.getMsgSenderName(msg);
-                    Log.i(TAG, "msg: " + mid + " ### " + text + " ### " + senderId + " ### " + senderName);
+                    String conversationId = DingDingMsg.getConversationId(msg);
+                    long sendTime = DingDingMsg.getMsgTime(msg);
+
+                    Log.i(TAG, "msg: " + mid + " ### " + content + " ### " + senderId + " ### " + senderName + " ### " + conversationId + " ### " + sendTime);
+
                     Map map =  new HashMap<>();
                     map.put("mid", Long.toString(mid));
-                    map.put("content", text);
+                    map.put("content", content);
                     map.put("senderId", senderId);
-                    map.put("type", DingDingMsg.MessageContentType.TEXT);
+                    map.put("type", type);
+                    map.put("conversationId", conversationId);
+                    map.put("msgTime", sendTime);
                     if(senderName != null && !senderName.isEmpty()){
                         map.put("senderName", senderName);
                     }
